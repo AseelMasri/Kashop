@@ -1,0 +1,6 @@
+a{
+    text-decoration: none;
+}
+body{
+    transition: background-color .8s, color .7s;
+}
