@@ -4,11 +4,16 @@ import Chip from '@mui/material/Chip';
 import AxiosUserInstanse from "../../api/AxiosUserInstanse";
 import { toast, Zoom } from "react-toastify";
 import AxiosInstanse from "../../api/AxiosInstanse";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function ProductsDetails() {
     
     const {id} =useParams();
+
+     {/**update cache */}
+      const queryClient = useQueryClient();
+
+
 
          {/*اول اشي منعمل فنكشن عشان نجيب الداتا */}
     const fetchProduct= async()=>{
@@ -46,6 +51,7 @@ export default function ProductsDetails() {
             theme: "colored",
             transition: Zoom,
             });
+            queryClient.invalidateQueries(['cartItems']);
 
           }
         console.log(response);

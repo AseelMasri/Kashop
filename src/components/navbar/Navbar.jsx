@@ -10,22 +10,26 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-
+import AxiosUserInstanse from '../../api/AxiosUserInstanse';
 
 export default function Navbar({isLoggedIn,setIsLoggedIn}) {
   const { t, i18n } = useTranslation();
 
    const fetchProducts= async ()=>{
     const response =await AxiosUserInstanse.get('/Carts');
-    return response;
+    return response.data;
 
   }
-  const{data}=useQuery({
+  const {data}=useQuery({
     queryKey:['cartItems'],
     queryFn:fetchProducts,
     staleTime:1000*60*5
   });
-  console.log(data?.items?.length ?? 0);
+  const cartItemCount=data?.items?.length??0;
+  console.log(cartItemCount);
+
+  //console.log(data?.items?.length??0);
+  //console.log(data?.items?.length ?? 0);
  //console.log(data.data.items.length);
   const navigate=useNavigate();
 
@@ -57,7 +61,7 @@ export default function Navbar({isLoggedIn,setIsLoggedIn}) {
           </Link>
           {isLoggedIn ?(
             <>
-            <Link component={RouterLink} to={'/cart'} color='inherit' underline='none'>{t("Cart")}</Link>
+            <Link component={RouterLink} to={'/cart'} color='inherit' underline='none'>{t("Cart")} {cartItemCount} </Link>
             <Link onClick={handleLogout} color='inherit' underline='none'> {t("Logout")}</Link>
 
              </>

@@ -2,133 +2,103 @@ import axios from 'axios';
 import { Box, Button, CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
-//import RemoveIcon from '@mui/icons-material/Remove';
 import RemoveIcon from '@mui/icons-material/Remove';
+import AxiosUserInstanse from '../../api/AxiosUserInstanse';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast, Zoom } from 'react-toastify';
 
 export default function Cart() {
+        const queryClient = useQueryClient();
 
-const [carts, setCarts] = useState([]);
-const [isLoading, setIsLoading] = useState(true);
+   const fetchProducts= async ()=>{
+    const response =await AxiosUserInstanse.get('/Carts');
+    return response.data;
 
+  }
+  const {data, isLoading, isError, error}=useQuery({
+    queryKey:['cartItems'],
+    queryFn:fetchProducts,
+    staleTime:1000*60*5
+  });
 
- const getProducts =async()=>{
+  const incrementItem = async(productId)=>{
+    const response = await AxiosUserInstanse.post(`/Carts/increment/${productId}`,{});
 
-      try{
-        const token= localStorage.getItem('userToken:');
+    if(response.status==200){
+      queryClient.invalidateQueries(['cartItems']);
+      toast.success('incrementItem sucessful', {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress:undefined ,
+              theme: "colored",
+              transition: Zoom,
+              });
+  
+    }
+  }
 
-        const response = await axios.get(`https://kashop1.runasp.net/api/Customer/Carts`,{
-           headers:{
-              Authorization:`Bearer ${token}`
-            }
-        }
-      );
-        console.log(response);
-        setCarts(response.data);
-        
-      }
-
-      catch(error){
-        console.log(error);
-      }finally{
-        setIsLoading(false);
-
-      }
+  const dcrementItem= async(productId)=>{
+     const response = await AxiosUserInstanse.post(`/Carts/decrement/${productId}`,{});
+     if(response.status==200){
+      queryClient.invalidateQueries(['cartItems']);
+      toast.success('Decrement Item sucessful', {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress:undefined ,
+              theme: "colored",
+              transition: Zoom,
+              });
+  
     }
 
-     const removeItem =async (productId)=>{
 
-      try{
-        const token= localStorage.getItem('userToken:');
-        const response = await axios.delete(`https://kashop1.runasp.net/api/Customer/Carts/${productId}`,{
-          headers:{
-              Authorization:`Bearer ${token}`
-            }
-          
-          })
-        getProducts();
+  }
+  
 
-      }catch(error){
+  const removeItem =async(productId)=>{
+    const response = await AxiosUserInstanse.delete(`/Carts/${productId}`);
+      if(response.status==200){
+      queryClient.invalidateQueries(['cartItems']);
+      toast.success('Remove Item Is sucessful', {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress:undefined ,
+              theme: "colored",
+              transition: Zoom,
+              });
+  
+    }
+  }
+    
 
-      }
-     }
+    const clearCart =async()=>{
+          const response = await AxiosUserInstanse.delete(`/Carts/clear`);
+          if(response.status==200){
+                  queryClient.invalidateQueries(['cartItems']);
 
-     const clearCart = async ()=>{
-
-      try{
-        const token = localStorage.getItem("userToken:");
-        const response = await axios.delete(`https://kashop1.runasp.net/api/Customer/Carts/clear`,{
-          headers:{
-            Authorization:`Bearer ${token}`
-          }
-        } );
-        if(response.status ==200)
-          getProducts();
-        //console.log(response);
-
-      }catch(error){
-        console.log(error);
-      }
-     }
-
-     const icrementItem = async (productId)=>{
-
-      try{
-        const token= localStorage.getItem('userToken:');
-        const response = await axios.post(`https://kashop1.runasp.net/api/Customer/Carts/increment/${productId}`,{},{
-          headers:{
-            Authorization:`Bearer ${token}`
 
           }
           
-        });
-        if(response.status==200){
-          getProducts();
-        }
           
 
 
-      }catch(error){
-        console.log(error);
-
-      }
-
-     }
-
-     const dcrementItem = async (productId)=>{
-
-      try{
-        const token= localStorage.getItem('userToken:');
-        const response = await axios.post(`https://kashop1.runasp.net/api/Customer/Carts/decrement/${productId}`,{},{
-          headers:{
-            Authorization:`Bearer ${token}`
-
-          }
-          
-        });
-        if(response.status==200){
-          getProducts();
-        }
-
-
-      }catch(error){
-        console.log(error);
-      }
-
-     }
-
-     useEffect( ()=>{
     
-        getProducts();
-      } ,[]);
-    
-            if (isLoading) {
-        return (
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
-            <CircularProgress />
-          </Box>
-        );
-      }
-    
+
+  }
+  if(isError) return <Typography component="p" variant="p" color="error">Error: {error?.message || "Failed to load brands"}</Typography>
+    if(isLoading) return <CircularProgress/>
 
   return (
     <TableContainer>
@@ -146,7 +116,7 @@ const [isLoading, setIsLoading] = useState(true);
 
          </TableHead>
          <TableBody>
-          {carts.items.map( (item)=>
+          {data.items.map( (item)=>
             <TableRow key={item.productId}>
               <TableCell>{item.productId}</TableCell>
               <TableCell>{item.productName}</TableCell>
@@ -154,9 +124,10 @@ const [isLoading, setIsLoading] = useState(true);
               
               <TableCell > 
                 <Box sx={{display:'flex',alignItems:'center',gap:'8px'}}>
-                <RemoveIcon variant='outlined' fontSize='small' onClick={ ()=> dcrementItem(item.productId)}>-</RemoveIcon>
-                {item.count}
-                <AddIcon variant='outlined' fontSize='small' onClick={ ()=> icrementItem(item.productId)}>+</AddIcon>
+
+               <RemoveIcon variant='outlined' fontSize='small' onClick={ ()=> dcrementItem(item.productId)}>-</RemoveIcon>
+                {item.count} 
+                <AddIcon variant='outlined' fontSize='small' onClick={ ()=> incrementItem(item.productId)}>+</AddIcon>
                  </Box>
                  </TableCell>
                  
@@ -172,13 +143,13 @@ const [isLoading, setIsLoading] = useState(true);
               </Typography>
             </TableCell>
             <TableCell>
-              {carts.cartTotal}$
+              {data.cartTotal}$
             </TableCell>
 
            </TableRow>
            <TableRow>
             <TableCell colSpan={6} align='right' >
-              <Button variant='contained' color='error' onClick={clearCart}> Clear Cart </Button>
+            <Button variant='contained' color='error' onClick={clearCart}> Clear Cart </Button> 
             </TableCell>
            </TableRow>
 
