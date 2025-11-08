@@ -6,6 +6,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import AxiosUserInstanse from '../../api/AxiosUserInstanse';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast, Zoom } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 export default function Cart() {
         const queryClient = useQueryClient();
@@ -90,9 +91,6 @@ export default function Cart() {
 
 
           }
-          
-          
-
 
     
 
@@ -120,7 +118,7 @@ export default function Cart() {
             <TableRow key={item.productId}>
               <TableCell>{item.productId}</TableCell>
               <TableCell>{item.productName}</TableCell>
-              <TableCell>{item.price}$  </TableCell>
+              <TableCell>{item.price} $  </TableCell>
               
               <TableCell > 
                 <Box sx={{display:'flex',alignItems:'center',gap:'8px'}}>
@@ -149,7 +147,10 @@ export default function Cart() {
            </TableRow>
            <TableRow>
             <TableCell colSpan={6} align='right' >
-            <Button variant='contained' color='error' onClick={clearCart}> Clear Cart </Button> 
+              <Box sx={{display:'flex',gap:2,justifyContent:'flex-end'}} >
+                <Button variant='contained' color='error' onClick={clearCart}> Clear Cart </Button> 
+                <Button component={Link} to='/checkout' variant='contained' color='primary'> checkout </Button> 
+              </Box>
             </TableCell>
            </TableRow>
 
