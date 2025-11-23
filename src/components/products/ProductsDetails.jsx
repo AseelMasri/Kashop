@@ -35,7 +35,7 @@ export default function ProductsDetails() {
     const addToCart = async (id)=>{
       try{
 
-        const response= await AxiosUserInstanse.post(`/Carts`,
+        const response= await AxiosUserInstanse.post(`Customer/Carts`,
           {productId:id});
           console.log(response);
 

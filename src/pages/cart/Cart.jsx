@@ -12,7 +12,7 @@ export default function Cart() {
         const queryClient = useQueryClient();
 
    const fetchProducts= async ()=>{
-    const response =await AxiosUserInstanse.get('/Carts');
+    const response =await AxiosUserInstanse.get('/Customer/Carts');
     return response.data;
 
   }
@@ -23,7 +23,7 @@ export default function Cart() {
   });
 
   const incrementItem = async(productId)=>{
-    const response = await AxiosUserInstanse.post(`/Carts/increment/${productId}`,{});
+    const response = await AxiosUserInstanse.post(`/Customer/Carts/increment/${productId}`,{});
 
     if(response.status==200){
       queryClient.invalidateQueries(['cartItems']);
@@ -43,7 +43,7 @@ export default function Cart() {
   }
 
   const dcrementItem= async(productId)=>{
-     const response = await AxiosUserInstanse.post(`/Carts/decrement/${productId}`,{});
+     const response = await AxiosUserInstanse.post(`/Customer/Carts/decrement/${productId}`,{});
      if(response.status==200){
       queryClient.invalidateQueries(['cartItems']);
       toast.success('Decrement Item sucessful', {
@@ -65,7 +65,7 @@ export default function Cart() {
   
 
   const removeItem =async(productId)=>{
-    const response = await AxiosUserInstanse.delete(`/Carts/${productId}`);
+    const response = await AxiosUserInstanse.delete(`/Customer/Carts/${productId}`);
       if(response.status==200){
       queryClient.invalidateQueries(['cartItems']);
       toast.success('Remove Item Is sucessful', {
@@ -85,7 +85,7 @@ export default function Cart() {
     
 
     const clearCart =async()=>{
-          const response = await AxiosUserInstanse.delete(`/Carts/clear`);
+          const response = await AxiosUserInstanse.delete(`/Customer/Carts/clear`);
           if(response.status==200){
                   queryClient.invalidateQueries(['cartItems']);
 

@@ -9,7 +9,7 @@ export default function Checkout() {
     
 
      const fetchProducts= async ()=>{
-        const response =await AxiosUserInstanse.get('/Carts');
+        const response =await AxiosUserInstanse.get('/Customer/Carts');
         return response.data;
     
       }
@@ -25,7 +25,7 @@ export default function Checkout() {
 
       const onSubmit=async (formData)=>{
         //console.log(formData);
-        const response = await AxiosUserInstanse.post('/CheckOut/payment',{
+        const response = await AxiosUserInstanse.post('/Customer/CheckOut/payment',{
             "paymentMethod": formData.paymentMethod
         });
 
