@@ -11,6 +11,9 @@ import Profile from "./pages/profile/Profile";
 import Info from "./pages/profile/Info";
 import Orders from "./pages/profile/Orders";
 import Setting from "./pages/profile/Setting";
+import Forgotpassword from "./pages/forgotPassword/Forgotpassword";
+import Resetpassword from "./pages/resetPassowrd/Resetpassword";
+import VerifyCode from "./pages/forgotPassword/VerifyCode";
 
 const router = createBrowserRouter([
   {
@@ -18,10 +21,10 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       {
-        index : true,
+        index: true,
         element: <Home />,
       },
-        
+
       {
         path: '/register',
         element: <Register />,
@@ -35,44 +38,55 @@ const router = createBrowserRouter([
 
 
       },
+      {
+        path: "/forgot-password",
+        element: <Forgotpassword />,
+      },
+      {
+        path: "/reset-password",
+        element: <Resetpassword />,
+      },
+        { path: "/verify-code",
+           element: <VerifyCode /> 
+          },
 
       {
         path: '/cart',
         element:
-        <ProtectedRouter>
-          <Cart />
-        </ProtectedRouter>,
+          <ProtectedRouter>
+            <Cart />
+          </ProtectedRouter>,
 
 
       },
       {
         path: '/checkout',
         element:
-        <ProtectedRouter>
-          <Checkout />
-        </ProtectedRouter>,
+          <ProtectedRouter>
+            <Checkout />
+          </ProtectedRouter>,
 
 
       },
       {
         path: '/profile',
         element:
-        <ProtectedRouter>
-          <Profile />
-        </ProtectedRouter>,
-        children:[
+          <ProtectedRouter>
+            <Profile />
+          </ProtectedRouter>,
+        children: [
           {
-            index:true,
-            element:<Info />
+            index: true,
+            element: <Info />
           },
           {
-            path:'orders',
-            element:<Orders />
+            path: 'orders',
+            element: <Orders />
 
           },
           {
-            path:'setting',
-            element:<Setting />
+            path: 'setting',
+            element: <Setting />
 
           },
 
@@ -83,11 +97,11 @@ const router = createBrowserRouter([
 
       },
       {
-        path:'/product/:id',
+        path: '/product/:id',
         element:
-        <ProtectedRouter>
-          <ProductsDetails />
-        </ProtectedRouter>,
+          <ProtectedRouter>
+            <ProductsDetails />
+          </ProtectedRouter>,
       }
     ],
   },
