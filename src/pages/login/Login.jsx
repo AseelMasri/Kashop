@@ -88,6 +88,7 @@ export default function Login() {
             boxShadow: 3,
             borderRadius: 3,
             overflow: "hidden",
+            mt:3,
           }}
         >
           {/* الصورة */}
@@ -105,7 +106,7 @@ export default function Login() {
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
-                bgcolor: "#6A1B9A",
+                bgcolor: "#0f5a97e7",
               }}
             />
           </Box>

@@ -84,7 +84,7 @@ export default function Register() {
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
-                bgcolor: "#4b226a",
+                bgcolor: "#0f5a97e7",
               }}
             />
           </Box>
